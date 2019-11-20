@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+
+  # api application
+  api:
+
+    build: ./app
+
+    command: ./boot.sh
+
+    ports:
+      - 5000:5000
+    depends_on:
+      - humidity
+
+  # humidity application
+  humidity:
+    build: ./humidity
+    command: ["python3", "data_loader.py"]
+    depends_on:
+      - redis
+
+  # Redis application
+  redis:
+    image: redis:4.0.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
